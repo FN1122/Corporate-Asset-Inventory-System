@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Sign in · CAIMS{% endblock %}
+
+{% block content %}
+<div style="max-width: 380px; margin: 4rem auto 0;">
+    <div style="text-align:center; margin-bottom: 2rem;">
+        <div class="brand" style="font-size: 2rem;">CA<span>IMS</span></div>
+        <p style="color: var(--ink-soft); margin-top: 0.5rem; font-size: 0.92rem;">
+            Corporate Asset &amp; Inventory Management
+        </p>
+    </div>
+
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 2rem;">
+        <h2 style="font-size: 1.3rem; margin-bottom: 1.5rem;">Sign in</h2>
+
+        {% if form.errors %}
+        <div style="background: rgba(217,90,90,0.12); border: 1px solid var(--bad); color: #f0b4b4; padding: 0.7rem 0.9rem; border-radius: 8px; font-size: 0.88rem; margin-bottom: 1.2rem;">
+            Your username and password didn't match. Please try again.
+        </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <label style="display:block; font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 0.35rem;">Username</label>
+            <input type="text" name="username" autofocus required
+                   style="width:100%; padding: 0.65rem 0.8rem; margin-bottom: 1.1rem; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--ink); font-family: inherit; font-size: 0.95rem;">
+
+            <label style="display:block; font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 0.35rem;">Password</label>
+            <input type="password" name="password" required
+                   style="width:100%; padding: 0.65rem 0.8rem; margin-bottom: 1.5rem; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--ink); font-family: inherit; font-size: 0.95rem;">
+
+            <button type="submit" class="btn" style="width:100%;">Sign in</button>
+            <input type="hidden" name="next" value="{{ next }}">
+        </form>
+    </div>
+</div>
+{% endblock %}

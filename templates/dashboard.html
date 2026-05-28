@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard · CAIMS{% endblock %}
+
+{% block extra_head %}
+<style>
+    .hero { margin-bottom: 2.5rem; }
+    .hero h1 { font-size: 2.1rem; margin-bottom: 0.4rem; }
+    .hero p { color: var(--ink-soft); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.1rem; }
+    .card {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 14px; padding: 1.4rem;
+        transition: border-color 0.15s ease, transform 0.15s ease;
+    }
+    .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .card h3 { font-size: 1.1rem; margin-bottom: 0.4rem; }
+    .card p { color: var(--ink-soft); font-size: 0.9rem; }
+    .card .tag {
+        display:inline-block; margin-top: 0.9rem; font-size: 0.78rem;
+        color: var(--accent); border: 1px solid var(--border);
+        padding: 0.15rem 0.55rem; border-radius: 999px;
+    }
+    .section-label {
+        font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em;
+        color: var(--ink-soft); margin-bottom: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>Welcome back, {{ user.username }}</h1>
+    <p>You're signed in as <strong style="color:var(--ink);">{{ role_label }}</strong>. Here's what you can do.</p>
+</div>
+
+<div class="section-label">Your tools</div>
+<div class="grid">
+    {% comment %} Cards are shown based on role. These link to features built in later phases. {% endcomment %}
+
+    {% if user.is_admin %}
+    <div class="card">
+        <h3>User Management</h3>
+        <p>Create users, assign roles, and manage accounts.</p>
+        <span class="tag">Admin</span>
+    </div>
+    <div class="card">
+        <h3>System Configuration</h3>
+        <p>Manage categories and overall system settings.</p>
+        <span class="tag">Admin</span>
+    </div>
+    {% endif %}
+
+    {% if user.is_admin or user.is_asset_manager %}
+    <div class="card">
+        <h3>Assets</h3>
+        <p>Register and track assets, generate QR codes.</p>
+        <span class="tag">Manage</span>
+    </div>
+    <div class="card">
+        <h3>Inventory</h3>
+        <p>Track consumable stock and reorder levels.</p>
+        <span class="tag">Manage</span>
+    </div>
+    <div class="card">
+        <h3>Approvals</h3>
+        <p>Review and approve or reject asset requests.</p>
+        <span class="tag">Manage</span>
+    </div>
+    {% endif %}
+
+    {% if user.is_employee %}
+    <div class="card">
+        <h3>Request an Asset</h3>
+        <p>Submit a request for a laptop, vehicle, or other asset.</p>
+        <span class="tag">Employee</span>
+    </div>
+    <div class="card">
+        <h3>My Assets</h3>
+        <p>View assets assigned to you and return them.</p>
+        <span class="tag">Employee</span>
+    </div>
+    {% endif %}
+
+    {% if user.is_auditor %}
+    <div class="card">
+        <h3>Audit Logs</h3>
+        <p>View the full activity trail across the system.</p>
+        <span class="tag">View only</span>
+    </div>
+    <div class="card">
+        <h3>Reports</h3>
+        <p>Browse asset, inventory, and movement reports.</p>
+        <span class="tag">View only</span>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

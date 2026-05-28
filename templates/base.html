@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CAIMS{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f1419;
+            --surface: #1a212b;
+            --surface-2: #232c38;
+            --border: #2f3a48;
+            --ink: #e6edf3;
+            --ink-soft: #9aa7b4;
+            --accent: #4a90d9;
+            --accent-dim: #356ba8;
+            --good: #4caf7d;
+            --warn: #d98a4a;
+            --bad: #d95a5a;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+        h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 600; letter-spacing: -0.01em; }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { color: var(--ink); }
+
+        .topbar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 2rem; height: 64px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+        }
+        .brand { font-family: 'Fraunces', serif; font-size: 1.35rem; font-weight: 600; color: var(--ink); letter-spacing: -0.02em; }
+        .brand span { color: var(--accent); }
+        .topbar-right { display: flex; align-items: center; gap: 1.25rem; font-size: 0.9rem; }
+        .user-chip { color: var(--ink-soft); }
+        .user-chip b { color: var(--ink); font-weight: 500; }
+        .role-tag {
+            display: inline-block; padding: 0.15rem 0.6rem; border-radius: 999px;
+            background: var(--surface-2); border: 1px solid var(--border);
+            font-size: 0.78rem; color: var(--accent); margin-left: 0.4rem;
+        }
+        .btn {
+            display: inline-block; padding: 0.55rem 1.1rem; border-radius: 8px;
+            background: var(--accent); color: #fff; border: none; cursor: pointer;
+            font-family: 'Outfit', sans-serif; font-size: 0.92rem; font-weight: 500;
+            transition: background 0.15s ease;
+        }
+        .btn:hover { background: var(--accent-dim); color: #fff; }
+        .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--ink-soft); }
+        .btn-ghost:hover { border-color: var(--accent); color: var(--ink); background: transparent; }
+
+        .wrap { max-width: 1080px; margin: 0 auto; padding: 2.5rem 2rem; }
+        .content { animation: rise 0.4s ease both; }
+        @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    {% if user.is_authenticated %}
+    <header class="topbar">
+        <div class="brand">CA<span>IMS</span></div>
+        <div class="topbar-right">
+            <span class="user-chip">
+                <b>{{ user.username }}</b>
+                <span class="role-tag">{{ user.get_role_display }}</span>
+            </span>
+            <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-ghost">Log out</button>
+            </form>
+        </div>
+    </header>
+    {% endif %}
+    <main class="wrap content">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
