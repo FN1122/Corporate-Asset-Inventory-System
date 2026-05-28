@@ -148,6 +148,22 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
 
+# Scheduled tasks (Celery Beat). crontab controls when each task runs.
+from celery.schedules import crontab  # noqa: E402
+
+CELERY_BEAT_SCHEDULE = {
+    "daily-low-stock-report": {
+        "task": "tasks.tasks.daily_low_stock_report",
+        # Every day at 08:00.
+        "schedule": crontab(hour=8, minute=0),
+    },
+    "unreturned-asset-reminders": {
+        "task": "tasks.tasks.unreturned_asset_reminders",
+        # Every day at 09:00.
+        "schedule": crontab(hour=9, minute=0),
+    },
+}
+
 # Email (console backend prints emails to the terminal during development)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
