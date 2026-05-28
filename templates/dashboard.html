@@ -62,24 +62,24 @@
         <p>Track consumable stock and reorder levels.</p>
         <span class="tag">Manage</span>
     </div>
-    <div class="card">
+    <a href="{% url 'approval_queue' %}" class="card" style="display:block;">
         <h3>Approvals</h3>
         <p>Review and approve or reject asset requests.</p>
         <span class="tag">Manage</span>
-    </div>
+    </a>
     {% endif %}
 
     {% if user.is_employee %}
-    <div class="card">
+    <a href="{% url 'request_create' %}" class="card" style="display:block;">
         <h3>Request an Asset</h3>
         <p>Submit a request for a laptop, vehicle, or other asset.</p>
         <span class="tag">Employee</span>
-    </div>
-    <div class="card">
+    </a>
+    <a href="{% url 'my_requests' %}" class="card" style="display:block;">
         <h3>My Assets</h3>
         <p>View assets assigned to you and return them.</p>
         <span class="tag">Employee</span>
-    </div>
+    </a>
     {% endif %}
 
     {% if user.is_auditor %}

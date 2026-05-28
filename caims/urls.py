@@ -23,6 +23,7 @@ urlpatterns = [
     # App
     path('', account_views.dashboard, name='dashboard'),
     path('assets/', include('assets.urls')),
+    path('requests/', include('requests_app.urls')),
 ]
 
 # Serve uploaded media (QR codes) during development.

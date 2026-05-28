@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Request an Asset · CAIMS{% endblock %}
+
+{% block extra_head %}
+<style>
+    .form-wrap { max-width: 560px; }
+    .form-wrap h1 { font-size: 1.8rem; margin-bottom: 1.5rem; }
+    .field { margin-bottom: 1.2rem; }
+    .field label { display:block; font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 0.35rem; }
+    .field select { width:100%; padding: 0.6rem 0.8rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--ink); font-family: inherit; font-size: 0.95rem; }
+    .actions { display:flex; gap: 0.8rem; margin-top: 1.6rem; }
+    .empty { color: var(--ink-soft); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-wrap">
+    <a href="{% url 'my_requests' %}" class="back" style="color:var(--ink-soft);font-size:0.88rem;">← My requests</a>
+    <h1 style="margin-top:0.7rem;">Request an Asset</h1>
+
+    {% if available %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="field">
+            <label for="asset">Choose an available asset</label>
+            <select name="asset" id="asset" required>
+                {% for asset in available %}
+                <option value="{{ asset.id }}">{{ asset.name }} — {{ asset.category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="actions">
+            <button type="submit" class="btn">Submit request</button>
+            <a href="{% url 'my_requests' %}" class="btn btn-ghost">Cancel</a>
+        </div>
+    </form>
+    {% else %}
+    <p class="empty">There are no available assets to request right now.</p>
+    {% endif %}
+</div>
+{% endblock %}

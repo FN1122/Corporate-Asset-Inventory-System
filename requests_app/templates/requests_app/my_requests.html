@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}My Requests · CAIMS{% endblock %}
+
+{% block extra_head %}
+<style>
+    .page-head { display:flex; align-items:center; justify-content:space-between; margin-bottom: 1.6rem; }
+    .page-head h1 { font-size: 1.9rem; }
+    .sub { font-size: 1rem; margin: 2rem 0 0.8rem; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.05em; }
+    table { width:100%; border-collapse: collapse; background: var(--surface); border-radius: 12px; overflow: hidden; }
+    th, td { text-align:left; padding: 0.8rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.92rem; }
+    th { color: var(--ink-soft); font-weight: 500; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    tr:last-child td { border-bottom: none; }
+    .badge { display:inline-block; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.78rem; border: 1px solid var(--border); }
+    .badge.PENDING { color: var(--warn); border-color: var(--warn); }
+    .badge.APPROVED { color: var(--good); border-color: var(--good); }
+    .badge.REJECTED { color: var(--bad); border-color: var(--bad); }
+    .empty { color: var(--ink-soft); padding: 1.5rem; text-align:center; }
+    .btn-sm { padding: 0.35rem 0.8rem; font-size: 0.84rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <h1>My Requests</h1>
+    <a href="{% url 'request_create' %}" class="btn">+ New Request</a>
+</div>
+
+<div class="sub">Assets currently assigned to me</div>
+<table>
+    <thead><tr><th>Asset</th><th>Assigned</th><th>Due</th><th></th></tr></thead>
+    <tbody>
+        {% for a in active_assignments %}
+        <tr>
+            <td>{{ a.asset.name }}</td>
+            <td>{{ a.assigned_date|date:"M j, Y" }}</td>
+            <td>{{ a.due_date|default:"—" }}</td>
+            <td style="text-align:right;">
+                <form method="post" action="{% url 'return_my_asset' a.pk %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-ghost btn-sm">Return</button>
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="empty">You don't have any assets assigned.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="sub">My request history</div>
+<table>
+    <thead><tr><th>Asset</th><th>Requested</th><th>Status</th></tr></thead>
+    <tbody>
+        {% for r in requests %}
+        <tr>
+            <td>{{ r.asset.name }}</td>
+            <td>{{ r.request_date|date:"M j, Y" }}</td>
+            <td><span class="badge {{ r.status }}">{{ r.get_status_display }}</span></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3" class="empty">No requests yet.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

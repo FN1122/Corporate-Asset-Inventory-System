@@ -83,6 +83,17 @@
     </header>
     {% endif %}
     <main class="wrap content">
+        {% if messages %}
+        <div style="margin-bottom: 1.5rem;">
+            {% for message in messages %}
+            <div style="padding: 0.7rem 1rem; border-radius: 8px; font-size: 0.9rem; margin-bottom: 0.5rem;
+                {% if message.tags == 'error' %}background: rgba(217,90,90,0.12); border: 1px solid var(--bad); color: #f0b4b4;
+                {% else %}background: rgba(76,175,125,0.12); border: 1px solid var(--good); color: #a6e0c2;{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
         {% block content %}{% endblock %}
     </main>
 </body>
