@@ -146,3 +146,6 @@ CELERY_TIMEZONE = TIME_ZONE
 
 # Email (console backend prints emails to the terminal during development)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Custom user model (must be set before the first migration that creates it)
+AUTH_USER_MODEL = 'accounts.User'
