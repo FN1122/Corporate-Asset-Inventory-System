@@ -40,6 +40,7 @@
             <div class="row"><span class="k">Location</span><span>{{ asset.current_location|default:"—" }}</span></div>
             <div class="row"><span class="k">Purchase date</span><span>{{ asset.purchase_date }}</span></div>
             <div class="row"><span class="k">Purchase cost</span><span>{{ asset.purchase_cost }}</span></div>
+            <div class="row"><span class="k">Current value <small style="opacity:0.6;">(straight-line)</small></span><span style="color:var(--accent);">{{ current_value }}</span></div>
         </div>
 
         <div class="sub">Depreciation history</div>

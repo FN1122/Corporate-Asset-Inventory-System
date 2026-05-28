@@ -83,11 +83,11 @@
     {% endif %}
 
     {% if user.is_auditor %}
-    <div class="card">
+    <a href="{% url 'audit_log_list' %}" class="card" style="display:block;">
         <h3>Audit Logs</h3>
         <p>View the full activity trail across the system.</p>
         <span class="tag">View only</span>
-    </div>
+    </a>
     <div class="card">
         <h3>Reports</h3>
         <p>Browse asset, inventory, and movement reports.</p>

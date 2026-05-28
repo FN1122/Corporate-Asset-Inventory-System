@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Audit Log · CAIMS{% endblock %}
+
+{% block extra_head %}
+<style>
+    .page-head { display:flex; align-items:center; justify-content:space-between; margin-bottom: 1.4rem; gap: 1rem; flex-wrap: wrap; }
+    .page-head h1 { font-size: 1.9rem; }
+    .search input {
+        padding: 0.5rem 0.8rem; background: var(--surface); border: 1px solid var(--border);
+        border-radius: 8px; color: var(--ink); font-family: inherit; font-size: 0.9rem; width: 260px;
+    }
+    table { width:100%; border-collapse: collapse; background: var(--surface); border-radius: 12px; overflow: hidden; }
+    th, td { text-align:left; padding: 0.8rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.9rem; vertical-align: top; }
+    th { color: var(--ink-soft); font-weight: 500; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    tr:last-child td { border-bottom: none; }
+    .ts { color: var(--ink-soft); white-space: nowrap; }
+    .who { color: var(--accent); }
+    .empty { color: var(--ink-soft); padding: 2rem; text-align:center; }
+    .note { color: var(--ink-soft); font-size: 0.85rem; margin-bottom: 1.2rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <h1>Audit Log</h1>
+    <form method="get" class="search">
+        <input type="text" name="q" value="{{ q }}" placeholder="Search actions...">
+    </form>
+</div>
+<p class="note">A read-only, append-only record of significant actions across the system.</p>
+
+<table>
+    <thead><tr><th>When</th><th>Who</th><th>Action</th><th>Detail</th></tr></thead>
+    <tbody>
+        {% for log in logs %}
+        <tr>
+            <td class="ts">{{ log.timestamp|date:"M j, Y H:i" }}</td>
+            <td class="who">{{ log.user.username|default:"system" }}</td>
+            <td>{{ log.action }}</td>
+            <td>{{ log.detail }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="empty">No audit entries{% if q %} match "{{ q }}"{% endif %}.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

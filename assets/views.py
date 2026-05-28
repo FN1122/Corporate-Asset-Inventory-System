@@ -7,6 +7,7 @@ from accounts.permissions import role_required
 from .forms import AssetForm
 from .models import Asset, AssetCategory
 from .qr import generate_qr_code
+from .depreciation import current_value
 
 # Roles allowed to create/edit assets.
 MANAGE_ROLES = (User.Role.ADMIN, User.Role.ASSET_MANAGER)
@@ -44,6 +45,7 @@ def asset_detail(request, pk):
     )
     context = {
         "asset": asset,
+        "current_value": current_value(asset),
         "depreciation_records": asset.depreciation_records.all(),
         "can_manage": request.user.role in MANAGE_ROLES,
     }
