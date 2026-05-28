@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ mode }} Asset · CAIMS{% endblock %}
+
+{% block extra_head %}
+<style>
+    .form-wrap { max-width: 560px; }
+    .form-wrap h1 { font-size: 1.8rem; margin-bottom: 1.5rem; }
+    .field { margin-bottom: 1.2rem; }
+    .field label { display:block; font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 0.35rem; }
+    .field input, .field select {
+        width: 100%; padding: 0.6rem 0.8rem; background: var(--surface); border: 1px solid var(--border);
+        border-radius: 8px; color: var(--ink); font-family: inherit; font-size: 0.95rem;
+    }
+    .field .err { color: var(--bad); font-size: 0.83rem; margin-top: 0.3rem; }
+    .actions { display:flex; gap: 0.8rem; margin-top: 1.6rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-wrap">
+    <a href="{% url 'asset_list' %}" class="back" style="color:var(--ink-soft);font-size:0.88rem;">← Back to assets</a>
+    <h1 style="margin-top:0.7rem;">{{ mode }} Asset</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="field">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% for error in field.errors %}<div class="err">{{ error }}</div>{% endfor %}
+        </div>
+        {% endfor %}
+        <div class="actions">
+            <button type="submit" class="btn">Save</button>
+            <a href="{% url 'asset_list' %}" class="btn btn-ghost">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

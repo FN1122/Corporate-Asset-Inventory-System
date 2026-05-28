@@ -121,4 +121,23 @@ class Command(BaseCommand):
                 return_date=timezone.now(),
             )
 
+        # --- Demo users for each role (known password for easy login) ---
+        demo_users = [
+            ("demo_admin", User.Role.ADMIN),
+            ("demo_manager", User.Role.ASSET_MANAGER),
+            ("demo_auditor", User.Role.AUDITOR),
+        ]
+        for username, role in demo_users:
+            u, was_created = User.objects.get_or_create(
+                username=username,
+                defaults={"email": f"{username}@example.com", "role": role},
+            )
+            if was_created:
+                u.set_password("demopass123")
+                u.save()
+
         self.stdout.write(self.style.SUCCESS("Done. Demo data created."))
+        self.stdout.write(
+            "Demo logins (password 'demopass123'): "
+            "demo_admin, demo_manager, demo_auditor, demo_employee"
+        )

@@ -52,11 +52,11 @@
     {% endif %}
 
     {% if user.is_admin or user.is_asset_manager %}
-    <div class="card">
+    <a href="{% url 'asset_list' %}" class="card" style="display:block;">
         <h3>Assets</h3>
         <p>Register and track assets, generate QR codes.</p>
         <span class="tag">Manage</span>
-    </div>
+    </a>
     <div class="card">
         <h3>Inventory</h3>
         <p>Track consumable stock and reorder levels.</p>

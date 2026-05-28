@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Assets · CAIMS{% endblock %}
+
+{% block extra_head %}
+<style>
+    .page-head { display:flex; align-items:center; justify-content:space-between; margin-bottom: 1.8rem; }
+    .page-head h1 { font-size: 1.9rem; }
+    .filters { display:flex; gap: 0.7rem; margin-bottom: 1.4rem; flex-wrap: wrap; }
+    .filters select {
+        padding: 0.5rem 0.7rem; background: var(--surface); border: 1px solid var(--border);
+        border-radius: 8px; color: var(--ink); font-family: inherit; font-size: 0.9rem;
+    }
+    table { width:100%; border-collapse: collapse; background: var(--surface); border-radius: 12px; overflow: hidden; }
+    th, td { text-align:left; padding: 0.85rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.92rem; }
+    th { color: var(--ink-soft); font-weight: 500; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--surface-2); }
+    .badge { display:inline-block; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.78rem; border: 1px solid var(--border); }
+    .badge.AVAILABLE { color: var(--good); border-color: var(--good); }
+    .badge.ASSIGNED { color: var(--accent); border-color: var(--accent); }
+    .badge.MAINTENANCE { color: var(--warn); border-color: var(--warn); }
+    .badge.SCRAPPED { color: var(--bad); border-color: var(--bad); }
+    .empty { color: var(--ink-soft); padding: 2rem; text-align:center; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <h1>Assets</h1>
+    {% if can_manage %}
+    <a href="{% url 'asset_create' %}" class="btn">+ Add Asset</a>
+    {% endif %}
+</div>
+
+<form method="get" class="filters">
+    <select name="status" onchange="this.form.submit()">
+        <option value="">All statuses</option>
+        {% for value, label in statuses %}
+        <option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+    <select name="category" onchange="this.form.submit()">
+        <option value="">All categories</option>
+        {% for cat in categories %}
+        <option value="{{ cat.id }}" {% if selected_category == cat.id|stringformat:'s' %}selected{% endif %}>{{ cat.name }}</option>
+        {% endfor %}
+    </select>
+</form>
+
+<table>
+    <thead>
+        <tr><th>Name</th><th>Category</th><th>Status</th><th>Location</th><th>Cost</th></tr>
+    </thead>
+    <tbody>
+        {% for asset in assets %}
+        <tr onclick="window.location='{% url 'asset_detail' asset.pk %}'" style="cursor:pointer;">
+            <td><a href="{% url 'asset_detail' asset.pk %}">{{ asset.name }}</a></td>
+            <td>{{ asset.category.name }}</td>
+            <td><span class="badge {{ asset.status }}">{{ asset.get_status_display }}</span></td>
+            <td>{{ asset.current_location|default:"—" }}</td>
+            <td>{{ asset.purchase_cost }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="empty">No assets found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

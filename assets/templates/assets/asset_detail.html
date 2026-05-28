@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}{{ asset.name }} · CAIMS{% endblock %}
+
+{% block extra_head %}
+<style>
+    .back { color: var(--ink-soft); font-size: 0.88rem; }
+    .detail-head { display:flex; align-items:center; justify-content:space-between; margin: 0.8rem 0 1.8rem; }
+    .detail-head h1 { font-size: 1.9rem; }
+    .layout { display:grid; grid-template-columns: 1fr 280px; gap: 1.6rem; align-items:start; }
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; }
+    .row { display:flex; justify-content:space-between; padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 0.93rem; }
+    .row:last-child { border-bottom:none; }
+    .row .k { color: var(--ink-soft); }
+    .qr-panel { text-align:center; }
+    .qr-panel img { width: 100%; max-width: 220px; background:#fff; padding: 10px; border-radius: 10px; }
+    .qr-panel .cap { color: var(--ink-soft); font-size: 0.82rem; margin-top: 0.7rem; }
+    .badge { display:inline-block; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.8rem; border: 1px solid var(--border); }
+    .badge.AVAILABLE { color: var(--good); border-color: var(--good); }
+    .badge.ASSIGNED { color: var(--accent); border-color: var(--accent); }
+    .badge.MAINTENANCE { color: var(--warn); border-color: var(--warn); }
+    .badge.SCRAPPED { color: var(--bad); border-color: var(--bad); }
+    .sub { font-size: 1rem; margin: 1.8rem 0 0.8rem; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.05em; }
+</style>
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'asset_list' %}" class="back">← Back to assets</a>
+<div class="detail-head">
+    <h1>{{ asset.name }}</h1>
+    {% if can_manage %}
+    <a href="{% url 'asset_edit' asset.pk %}" class="btn btn-ghost">Edit</a>
+    {% endif %}
+</div>
+
+<div class="layout">
+    <div>
+        <div class="panel">
+            <div class="row"><span class="k">Category</span><span>{{ asset.category.name }}</span></div>
+            <div class="row"><span class="k">Status</span><span class="badge {{ asset.status }}">{{ asset.get_status_display }}</span></div>
+            <div class="row"><span class="k">Location</span><span>{{ asset.current_location|default:"—" }}</span></div>
+            <div class="row"><span class="k">Purchase date</span><span>{{ asset.purchase_date }}</span></div>
+            <div class="row"><span class="k">Purchase cost</span><span>{{ asset.purchase_cost }}</span></div>
+        </div>
+
+        <div class="sub">Depreciation history</div>
+        <div class="panel">
+            {% for rec in depreciation_records %}
+            <div class="row"><span class="k">{{ rec.date_recorded }}</span><span>{{ rec.value }}</span></div>
+            {% empty %}
+            <div style="color:var(--ink-soft); font-size:0.9rem;">No depreciation records yet.</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="panel qr-panel">
+        {% if asset.qr_code %}
+        <img src="{{ asset.qr_code.url }}" alt="QR code for {{ asset.name }}">
+        <div class="cap">Scan to identify this asset</div>
+        {% else %}
+        <div style="color:var(--ink-soft); font-size:0.9rem;">No QR code generated.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
